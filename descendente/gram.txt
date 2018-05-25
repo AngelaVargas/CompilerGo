@@ -1,0 +1,104 @@
+
+<PROG> ::= <ITEMS> EOF
+
+<ITEMS> ::= 'type' 'record' type_id '(' <ARGS> ')' <ITEMS> |
+            'func' <FUNC> <ITEMS> |
+            empty
+
+<FUNC> ::= func_id '(' <ARGS> ')' '{' <BODY> '}'
+
+<ARGS> ::=  type id <OTHERARGS> |
+            empty
+
+<OTHERARGS> ::= ',' type id <OTHERARGS> |
+               empty
+
+<BODY> ::=  func_id '(' <PARAMS> ')' ';' <BODY> |  --LLamada a función
+            var_id <FIELD> '=' <EXPR> ';' <BODY> |
+           'iter' '(' <DECL> ',' <EXPR> ',' <EXPR> ')' '{' <BODY> '}' <BODY> |
+            type_id id ';' |
+           'if' '(' <EXPR> ')' '{' <BODY> '}' <ELSE> |
+            empty
+
+<PARAMS> ::= <EXPR> <OTHERPARAMS>
+
+<OTHERPARAMS> ::=  ',' <EXPR> <OTHERPARAMS> |
+                    empty
+
+<DECL> ::= id ':' '=' <EXPR>
+
+<ELSE> ::= 'else' '{' <BODY> '}' |
+           empty
+
+<FIELD> ::= '.' record_field <FIELD> |
+            empty
+
+<EXPR> ::= <EXPR_1> <SIMB_1>
+
+<SIMB_1> ::= '<=' <EXPR> |
+             '>=' <EXPR> |
+             '<'  <EXPR> |
+             '>' <EXPR>  |
+             empty
+
+<EXPR_1> ::= <EXPR_2> <SIMB_2>
+
+<SIMB_2> ::= '+' <EXPR_1> |
+             '-' <EXPR_1> |
+             '^' <EXPR_1> |
+             '|' <EXPR_1> |
+             empty
+
+<EXPR_2> ::= <EXPR_3> <SIMB_3>
+
+<SIMB_3> ::= '*' <EXPR_2> |
+             '/' <EXPR_2> |
+             '%' <EXPR_2> |
+             '&' <EXPR_2> |
+             empty
+
+
+<EXPR_3> ::= <ATOM> <SIMB_4>
+
+<SIMB_4> ::=  '**' <EXPR_3> |
+              '!' <EXPR_3> |
+              empty
+
+<ATOM> ::= bool |
+           id |
+           int |
+           var_id <FIELD> |
+           '[' <PARAMS> ']' |
+           '(' <EXPR> ')'
+
+
+
+---------------
+
+<PROG> ::= <FUNCS> EOF
+
+<FUNCS> ::= 'func' <FUNC> <FUNCS> |
+            empty
+
+<FUNC> ::= id '(' <ARGS> ')' '{' <BODY> '}'
+
+<ARGS> ::=  type id <OTHERARGS> |
+            empty
+
+<OTHERARGS> ::= ',' type id <OTHERARGS> |
+               empty
+
+<BODY> ::= id '(' <PARAMS> ')' ';' <BODY> |
+           'iter' '(' <DECL> ';' <ATOM> ',' num ')' '{' <BODY> '}' <BODY> |
+           empty
+
+<PARAMS> ::= <ATOM> <OTHERPARAMS>
+
+<OTHERPARAMS> ::=  ',' <ATOM> <OTHERPARAMS> |
+                  empty
+
+<DECL> ::= id ':' '=' <ATOM>
+
+<ATOM> ::= bool |
+           id |
+           int
